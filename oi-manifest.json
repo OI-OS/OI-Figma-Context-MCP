@@ -1,0 +1,80 @@
+{
+  "server_name": "OI-Figma-Context-MCP",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "keyword": "get figma data",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "fetch figma data",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "get figma design",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "fetch figma design",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "get figma file",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "fetch figma file",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "figma data",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "figma design",
+      "tool_name": "get_figma_data",
+      "priority": 10
+    },
+    {
+      "keyword": "download figma images",
+      "tool_name": "download_figma_images",
+      "priority": 10
+    },
+    {
+      "keyword": "fetch figma images",
+      "tool_name": "download_figma_images",
+      "priority": 10
+    },
+    {
+      "keyword": "get figma images",
+      "tool_name": "download_figma_images",
+      "priority": 10
+    },
+    {
+      "keyword": "download images from figma",
+      "tool_name": "download_figma_images",
+      "priority": 10
+    }
+  ],
+  "parameter_extractors": {
+    "get_figma_data": {
+      "OI-Figma-Context-MCP::get_figma_data.fileKey": "regex:(?:file[\\s_-]?key|file[\\s_-]?id|figma[\\s_-]?file)[\\s:]+([a-zA-Z0-9]+)|figma\\.com/(?:file|design)/([a-zA-Z0-9]+)",
+      "OI-Figma-Context-MCP::get_figma_data.nodeId": "regex:(?:node[\\s_-]?id|node)[\\s:]+([I]?\\d+[:|-]\\d+(?:;\\d+[:|-]\\d+)*)|node-id=([I]?\\d+[:|-]\\d+(?:;\\d+[:|-]\\d+)*)",
+      "OI-Figma-Context-MCP::get_figma_data.depth": "regex:(?:depth|levels?)[\\s:]+(\\d+)"
+    },
+    "download_figma_images": {
+      "OI-Figma-Context-MCP::download_figma_images.fileKey": "regex:(?:file[\\s_-]?key|file[\\s_-]?id|figma[\\s_-]?file)[\\s:]+([a-zA-Z0-9]+)|figma\\.com/(?:file|design)/([a-zA-Z0-9]+)",
+      "OI-Figma-Context-MCP::download_figma_images.localPath": "regex:(?:path|local[\\s_-]?path|directory|dir)[\\s:]+([^\\s]+)",
+      "OI-Figma-Context-MCP::download_figma_images.pngScale": "regex:(?:scale|png[\\s_-]?scale)[\\s:]+(\\d+)"
+    }
+  },
+  "reminder_message": "Figma MCP server requires FIGMA_API_KEY environment variable or --figma-api-key CLI argument. Get your API key from https://www.figma.com/settings. The download_figma_images tool requires complex array parameters - consider using direct calls for this tool. File keys can be extracted from Figma URLs: figma.com/file/<fileKey>/..."
+}
+
