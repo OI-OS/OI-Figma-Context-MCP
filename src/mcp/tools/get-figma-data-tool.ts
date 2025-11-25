@@ -8,6 +8,8 @@ import {
 } from "~/extractors/index.js";
 import yaml from "js-yaml";
 import { Logger, writeLogs } from "~/utils/logger.js";
+import fs from "fs";
+import path from "path";
 
 const parameters = {
   fileKey: z
@@ -87,6 +89,31 @@ async function getFigmaData(
     Logger.log(`Generating ${outputFormat.toUpperCase()} result from extracted data`);
     const formattedResult =
       outputFormat === "json" ? JSON.stringify(result, null, 2) : yaml.dump(result);
+
+    // Auto-save to figma-files directory in project root
+    try {
+      const projectRoot = process.cwd();
+      const figmaFilesDir = path.join(projectRoot, "figma-files");
+      
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(figmaFilesDir)) {
+        fs.mkdirSync(figmaFilesDir, { recursive: true });
+      }
+
+      // Generate filename: fileKey_nodeId_timestamp.extension
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, -5);
+      const nodeIdPart = nodeId ? `_${nodeId.replace(/[:;]/g, "-")}` : "";
+      const extension = outputFormat === "json" ? "json" : "yaml";
+      const filename = `${fileKey}${nodeIdPart}_${timestamp}.${extension}`;
+      const filePath = path.join(figmaFilesDir, filename);
+
+      fs.writeFileSync(filePath, formattedResult, "utf-8");
+      Logger.log(`Saved Figma data to: ${filePath}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      Logger.log(`Failed to save Figma data to file: ${errorMessage}`);
+      // Continue execution even if file save fails
+    }
 
     Logger.log("Sending result to client");
     return {
